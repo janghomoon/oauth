@@ -1,0 +1,94 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.5.3'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.asciidoctor.convert' version '1.5.8'
+}
+
+group = 'com.oauth2'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // DB 쿼리 작성을 쉽게 하기 위함
+    implementation 'org.springframework.boot:spring-boot-starter-security' // 스프링 시큐리티
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // 타임리프로 쉽게 웹 화면 구성을 위함
+    implementation 'org.springframework.boot:spring-boot-starter-web' // mvc 웹 구조 사용을 위함
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5' // 타임리프 화면에서 스프링 시큐리티 사용을 위함
+    implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.4.RELEASE' // spring oauth 2.0
+    implementation 'org.apache.commons:commons-lang3:3.8' // 유틸리티 사용을 위함
+    implementation 'com.konghq:unirest-java:3.7.02' // http 통신을 쉽게 하기 위함
+    compileOnly 'org.projectlombok:lombok' // 변수 get, set 함수 편리하게 만들기 위함
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'mysql:mysql-connector-java' // mysql 사용
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+
+//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    implementation 'org.springframework.security.oauth:spring-security-oauth2:2.5.2.RELEASE'
+//    implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.6.8'
+////    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+////    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+//    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.boot:spring-boot-starter-web'
+//
+//    compileOnly 'org.projectlombok:lombok'
+//    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//    runtimeOnly 'com.h2database:h2'
+//    runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
+//    runtimeOnly 'com.mysql:mysql-connector-j'
+//    runtimeOnly 'mysql:mysql-connector-java' // mysql 사용
+//
+//    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+//    annotationProcessor 'org.projectlombok:lombok'
+//
+//
+//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+//    testImplementation 'org.springframework.security:spring-security-test'
+//
+//
+////    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // DB 쿼리 작성을 쉽게 하기 위함
+////    implementation 'org.springframework.boot:spring-boot-starter-security' // 스프링 시큐리티
+////    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // 타임리프로 쉽게 웹 화면 구성을 위함
+////    implementation 'org.springframework.boot:spring-boot-starter-web' // mvc 웹 구조 사용을 위함
+////    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5' // 타임리프 화면에서 스프링 시큐리티 사용을 위함
+////    implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.5.2.RELEASE'
+//    // spring oauth 2.0
+//    implementation 'org.apache.commons:commons-lang3:3.12.0' // 유틸리티 사용을 위함
+//    implementation 'com.konghq:unirest-java:3.14.0' // http 통신을 쉽게 하기 위함
+//
+////    compileOnly 'org.projectlombok:lombok' // 변수 get, set 함수 편리하게 만들기 위함
+////    annotationProcessor 'org.projectlombok:lombok'
+////    runtimeOnly 'mysql:mysql-connector-java' // mysql 사용
+}
+
+tasks.named('test') {
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+    inputs.dir snippetsDir
+    dependsOn test
+}
